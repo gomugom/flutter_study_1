@@ -18,7 +18,7 @@ class IntroPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text('토마토마켓', style: TextStyle(fontSize: 30, color: Colors.red, fontWeight: FontWeight.bold)),
+            Text('토마토마켓', style: Theme.of(context).textTheme.headline3!.copyWith(color: Theme.of(context).primaryColor)),
             ExtendedImage.asset('assets/imgs/carrot_intro.png'),
             Text('우리 동네 중고 직거래 토마토마켓', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             Text('\'토마토마켓은 동네 직거래 마켓이에요.\n내 동네를 설정하고 시작해보세요.\'', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
@@ -27,8 +27,8 @@ class IntroPage extends StatelessWidget {
               children: [
                 TextButton(
                     onPressed: onBtnClick,
-                    child: Text('내 동네 설정하고 시작하기', style: TextStyle(color: Colors.white)),
-                    style: TextButton.styleFrom(backgroundColor: Colors.lightBlueAccent)
+                    child: Text('내 동네 설정하고 시작하기', style: Theme.of(context).textTheme.button),
+                    style: TextButton.styleFrom(backgroundColor: Theme.of(context).primaryColor)
                 ),
               ],
             )
