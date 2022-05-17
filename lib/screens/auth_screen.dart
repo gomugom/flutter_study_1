@@ -7,10 +7,15 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    PageController controller = PageController();
+
     return Scaffold(
       body: PageView(
+          controller: controller,
+          physics: NeverScrollableScrollPhysics(),
           children: [
-            IntroPage(),
+            IntroPage(controller),
             Container(color: Colors.accents[0]),
             Container(color: Colors.accents[1])
           ]
