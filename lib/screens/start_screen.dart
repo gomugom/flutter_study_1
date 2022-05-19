@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_study_1/screens/start/address_page.dart';
+import 'package:flutter_study_1/screens/start/auth_page.dart';
 import 'package:flutter_study_1/screens/start/intro_page.dart';
 
-class AuthScreen extends StatelessWidget {
+class StartScreen extends StatelessWidget {
 
-  const AuthScreen({Key? key}) : super(key: key);
+  const StartScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +15,11 @@ class AuthScreen extends StatelessWidget {
     return Scaffold(
       body: PageView(
           controller: controller,
-          physics: NeverScrollableScrollPhysics(),
+          // physics: NeverScrollableScrollPhysics(),
           children: [
             IntroPage(controller),
-            Container(color: Colors.accents[0]),
-            Container(color: Colors.accents[1])
+            AddressPage(),
+            AuthPage()
           ]
       )
     );

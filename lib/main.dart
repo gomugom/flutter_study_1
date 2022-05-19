@@ -2,8 +2,7 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_study_1/router/home_location.dart';
-import 'package:flutter_study_1/screens/auth_screen.dart';
-import 'package:flutter_study_1/screens/home_screen.dart';
+import 'package:flutter_study_1/screens/start_screen.dart';
 import 'package:flutter_study_1/screens/splash_screen.dart';
 import 'package:flutter_study_1/utils/logger.dart';
 
@@ -14,7 +13,7 @@ final routerDelegate = BeamerDelegate(
         check: (context, location) {
           return false;
         },
-        showPage: BeamPage(child: AuthScreen())
+        showPage: BeamPage(child: StartScreen())
         //beamToNamed: (origin, target) => '/auth'
     )
   ],
@@ -72,8 +71,18 @@ class TomatoApp extends StatelessWidget {
             button: TextStyle(
               color: Colors.white
             )
+          ),
+          hintColor: Colors.grey[400],
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.white,
+            titleTextStyle: TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                fontFamily: 'jua'
+            )
           )
-        ),
+        )
     );
   }
 }

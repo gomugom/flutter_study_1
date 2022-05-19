@@ -1,0 +1,2 @@
+final COMMON_PADDING = 16.0;
+final COMMON_SMALL_PADDING = 8.0;
