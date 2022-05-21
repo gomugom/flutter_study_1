@@ -81,6 +81,14 @@ class TomatoApp extends StatelessWidget {
                 fontSize: 20,
                 fontFamily: 'jua'
             )
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.red,
+              minimumSize: Size(48, 48),
+              textStyle: TextStyle(fontFamily: 'jua'),
+              primary: Colors.white
+            )
           )
         )
     );
