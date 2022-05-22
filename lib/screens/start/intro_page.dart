@@ -1,7 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_study_1/state/user_provider.dart';
 
 import '../../utils/logger.dart';
+import 'package:provider/provider.dart'; // context.read<T>() 를 사용하기 위해 import 필요
 
 class IntroPage extends StatelessWidget {
 
@@ -9,13 +12,21 @@ class IntroPage extends StatelessWidget {
 
   IntroPage(this.pageController, {Key? key}) : super(key: key);
 
-  void onBtnClick() {
+  void onBtnClick() async {
     logger.d('btn clicked');
+
+    var result = await Dio().get('https://randomuser.me/api/');
+
+    logger.d('result : ${result.toString()}');
+
     pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.ease);
   }
 
   @override
   Widget build(BuildContext context) {
+
+    logger.d('current State : ${context.read<UserProvider>()}');
+
     return LayoutBuilder(
       builder: (context, constraints) {
 

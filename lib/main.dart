@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_study_1/router/home_location.dart';
 import 'package:flutter_study_1/screens/start_screen.dart';
 import 'package:flutter_study_1/screens/splash_screen.dart';
+import 'package:flutter_study_1/state/user_provider.dart';
 import 'package:flutter_study_1/utils/logger.dart';
+import 'package:provider/provider.dart';
 
 final routerDelegate = BeamerDelegate(
   guards: [ // 특정 조건(미로그인 등)일 경우 보여줄 page 지정
     BeamGuard(
         pathBlueprints: ['/'],
         check: (context, location) {
-          return false;
+          return context.watch<UserProvider>().userState;  // read() => notifier()를 안받음, watch() => notifier를 부를 때마다 호출됨
         },
         showPage: BeamPage(child: StartScreen())
         //beamToNamed: (origin, target) => '/auth'
@@ -58,39 +60,43 @@ class TomatoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-        routeInformationParser: BeamerParser(),
-        routerDelegate: routerDelegate,
-        theme: ThemeData(
-          fontFamily: 'jua',
-          primarySwatch: Colors.red,
-          textTheme: TextTheme(
-            headline3: TextStyle(
-              fontFamily: 'jua'
-            ),
-            button: TextStyle(
-              color: Colors.white
-            )
-          ),
-          hintColor: Colors.grey[400],
-          appBarTheme: AppBarTheme(
-            backgroundColor: Colors.white,
-            titleTextStyle: TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+    return ChangeNotifierProvider<UserProvider>(
+      create: (BuildContext context) { return UserProvider(); },
+      child: MaterialApp.router(
+          routeInformationParser: BeamerParser(),
+          routerDelegate: routerDelegate,
+          theme: ThemeData(
+            fontFamily: 'jua',
+            primarySwatch: Colors.red,
+            textTheme: TextTheme(
+              headline3: TextStyle(
                 fontFamily: 'jua'
-            )
-          ),
-          textButtonTheme: TextButtonThemeData(
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.red,
-              minimumSize: Size(48, 48),
-              textStyle: TextStyle(fontFamily: 'jua'),
-              primary: Colors.white
+              ),
+              button: TextStyle(
+                color: Colors.white
+              )
+            ),
+            hintColor: Colors.grey[400],
+            appBarTheme: AppBarTheme(
+              backgroundColor: Colors.white,
+              titleTextStyle: TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  fontFamily: 'jua'
+              ),
+              actionsIconTheme: IconThemeData(color: Colors.black87)
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.red,
+                minimumSize: Size(48, 48),
+                textStyle: TextStyle(fontFamily: 'jua'),
+                primary: Colors.white
+              )
             )
           )
-        )
+      ),
     );
   }
 }

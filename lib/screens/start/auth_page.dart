@@ -2,7 +2,9 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_study_1/constraints/common_constraints.dart';
+import 'package:flutter_study_1/state/user_provider.dart';
 import 'package:flutter_study_1/utils/logger.dart';
+import 'package:provider/provider.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -27,101 +29,104 @@ class _AuthPageState extends State<AuthPage> {
 
         Size size = MediaQuery.of(context).size;
 
-        return Form(
-          key: _globalKey,
-          child: Scaffold(
-            appBar: AppBar(title: Text('전화번호 로그인')),
-            body: Padding(
-              padding: EdgeInsets.all(COMMON_PADDING),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      ExtendedImage.asset('assets/imgs/padlock.png', width: size.width * 0.15, height: size.width * 0.15),
-                      SizedBox(width: COMMON_SMALL_PADDING),
-                      Text('토마토마켓은 휴대폰 번호로 가입해요.\n번호는 안전하게 보관 되며\n어디에도 공개되지 않아요.')
-                    ],
-                  ),
-                  SizedBox(height: COMMON_SMALL_PADDING),
-                  TextFormField(
-                    controller: txtEditController,
-                    inputFormatters: [
-                      MaskedInputFormatter('010 0000 0000')
-                    ],
-                    validator: (inputTxt) {
-                      if(inputTxt != null && inputTxt.length == 13) {
-                        return null;
-                      } else {
-                        return '전화번호를 올바르게 입력하세요.';
-                      }
-                    },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey)
-                      )
-                    )
-                  ),
-                  SizedBox(height: COMMON_SMALL_PADDING),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      TextButton(onPressed: () {
-                        if(_globalKey.currentState != null) {
-                          bool flag = _globalKey.currentState!.validate();
-                          logger.d('flag value : ${flag}');
-
-                          if(flag) { // validation passed
-                            setState(() {
-                              _verificationStatus = VerificationStatus.sending;
-                            });
-                          }
+        return IgnorePointer(
+          ignoring: _verificationStatus == VerificationStatus.verifying ? true : false,
+          child: Form(
+            key: _globalKey,
+            child: Scaffold(
+              appBar: AppBar(title: Text('전화번호 로그인')),
+              body: Padding(
+                padding: EdgeInsets.all(COMMON_PADDING),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        ExtendedImage.asset('assets/imgs/padlock.png', width: size.width * 0.15, height: size.width * 0.15),
+                        SizedBox(width: COMMON_SMALL_PADDING),
+                        Text('토마토마켓은 휴대폰 번호로 가입해요.\n번호는 안전하게 보관 되며\n어디에도 공개되지 않아요.')
+                      ],
+                    ),
+                    SizedBox(height: COMMON_SMALL_PADDING),
+                    TextFormField(
+                      controller: txtEditController,
+                      inputFormatters: [
+                        MaskedInputFormatter('010 0000 0000')
+                      ],
+                      validator: (inputTxt) {
+                        if(inputTxt != null && inputTxt.length == 13) {
+                          return null;
+                        } else {
+                          return '전화번호를 올바르게 입력하세요.';
                         }
-                      }, child: Text('인증문자 발송')),
-                    ],
-                  ),
-                  SizedBox(height: COMMON_SMALL_PADDING),
-                  AnimatedOpacity(
-                    opacity: this.getOpacityValue(_verificationStatus),
-                    curve: Curves.easeInOut,
-                    duration: Duration(milliseconds: 300),
-                    child: AnimatedContainer(
-                      height: this.getHeight('txtFormField', _verificationStatus),
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                        )
+                      )
+                    ),
+                    SizedBox(height: COMMON_SMALL_PADDING),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        TextButton(onPressed: () {
+                          if(_globalKey.currentState != null) {
+                            bool flag = _globalKey.currentState!.validate();
+                            logger.d('flag value : ${flag}');
+
+                            if(flag) { // validation passed
+                              setState(() {
+                                _verificationStatus = VerificationStatus.sending;
+                              });
+                            }
+                          }
+                        }, child: Text('인증문자 발송')),
+                      ],
+                    ),
+                    SizedBox(height: COMMON_SMALL_PADDING),
+                    AnimatedOpacity(
+                      opacity: this.getOpacityValue(_verificationStatus),
+                      curve: Curves.easeInOut,
                       duration: Duration(milliseconds: 300),
-                      child: TextFormField(
-                          controller: authEditController,
-                          inputFormatters: [
-                            MaskedInputFormatter('000000')
+                      child: AnimatedContainer(
+                        height: this.getHeight('txtFormField', _verificationStatus),
+                        duration: Duration(milliseconds: 300),
+                        child: TextFormField(
+                            controller: authEditController,
+                            inputFormatters: [
+                              MaskedInputFormatter('000000')
+                            ],
+                            validator: (inputAuthTxt) {
+
+                            },
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey)
+                                )
+                            )
+                        ),
+                      ),
+                    ),
+                    AnimatedOpacity(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      opacity: this.getOpacityValue(_verificationStatus),
+                      child: AnimatedContainer(
+                        height: this.getHeight('btn', _verificationStatus),
+                        duration: Duration(milliseconds: 300),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            TextButton(onPressed: () {
+                              this.attemptVerify();
+                            }, child: _verificationStatus == VerificationStatus.verifying ? CircularProgressIndicator() : Text('인증')),
                           ],
-                          validator: (inputAuthTxt) {
-
-                          },
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey)
-                              )
-                          )
+                        ),
                       ),
-                    ),
-                  ),
-                  AnimatedOpacity(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    opacity: this.getOpacityValue(_verificationStatus),
-                    child: AnimatedContainer(
-                      height: this.getHeight('btn', _verificationStatus),
-                      duration: Duration(milliseconds: 300),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          TextButton(onPressed: () {
-
-                          }, child: Text('인증')),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              )
+                    )
+                  ],
+                )
+              ),
             ),
           ),
         );
@@ -134,7 +139,8 @@ class _AuthPageState extends State<AuthPage> {
       case VerificationStatus.none:
         return 0;
       case VerificationStatus.sending:
-      case VerificationStatus.sendAndDone:
+      case VerificationStatus.verifying:
+      case VerificationStatus.verifyDone:
         if(type == 'btn') {
           return 40 + COMMON_SMALL_PADDING;
         } else {
@@ -146,15 +152,33 @@ class _AuthPageState extends State<AuthPage> {
   double getOpacityValue(VerificationStatus status) {
     switch (status) {
       case VerificationStatus.none:
-        return 0;
+        return 0.0;
       case VerificationStatus.sending:
-      case VerificationStatus.sendAndDone:
-          return 1;
+      case VerificationStatus.verifying:
+      case VerificationStatus.verifyDone:
+          return 1.0;
     }
+  }
+
+  void attemptVerify() async {
+
+    setState(() {
+      _verificationStatus = VerificationStatus.verifying;
+    });
+
+    await Future.delayed(Duration(seconds: 1));
+
+    setState(() {
+      _verificationStatus = VerificationStatus.verifyDone;
+    });
+
+    // prover를 read가 아닌 watch로 부를 경우 이곳도 계속 재 build되므로 loop를 돌게 됨 따라서, 상태 변경시 read를 통해 할 수 있도록 한다.
+    context.read<UserProvider>().setUserAuth(true);
+
   }
 
 }
 
 enum VerificationStatus {
-  none, sending, sendAndDone
+  none, sending, verifying, verifyDone
 }
