@@ -15,10 +15,6 @@ class IntroPage extends StatelessWidget {
   void onBtnClick() async {
     logger.d('btn clicked');
 
-    var result = await Dio().get('https://randomuser.me/api/');
-
-    logger.d('result : ${result.toString()}');
-
     pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.ease);
   }
 
