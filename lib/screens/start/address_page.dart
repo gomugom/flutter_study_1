@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_study_1/constraints/shared_pref_keys.dart';
 import 'package:flutter_study_1/data/AddressCoordinateModel.dart';
 import 'package:flutter_study_1/data/AddressModel.dart';
 import 'package:flutter_study_1/screens/start/address_service.dart';
 import 'package:flutter_study_1/utils/logger.dart';
 import 'package:location/location.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constraints/common_constraints.dart';
 
@@ -27,6 +30,12 @@ class _AddressPageState extends State<AddressPage> {
   bool isSearching = false;
 
   List<AddressCoordinateModel> addressCoordinateModel = [];
+
+  @override
+  void dispose() {
+    _addressController.dispose();
+    _scrollController.dispose();
+  }
 
   @override
   void initState() {
@@ -137,6 +146,12 @@ class _AddressPageState extends State<AddressPage> {
                       return Container();
                     } else {
                       return ListTile(
+                          onTap: () {
+                            this.saveAddressAndGoNextPage(_addressModel?.response!.result!.items![index].address!.road??'', 2,
+                                num.parse(_addressModel?.response!.result!.items![index].point!.y ?? '0'),
+                                num.parse(_addressModel?.response!.result!.items![index].point!.x ?? '0')
+                            );
+                          },
                           title: Text(_addressModel?.response!.result!.items![index].address!.road??''),
                           subtitle: Text(_addressModel!.response!.result!.items![index].address!.parcel??'')
                       );
@@ -153,6 +168,12 @@ class _AddressPageState extends State<AddressPage> {
                       return Container();
                     } else {
                       return ListTile(
+                          onTap: () {
+                            this.saveAddressAndGoNextPage(addressCoordinateModel[index].result![0].text??'', 2,
+                                num.parse(addressCoordinateModel[index].input!.point!.y ?? '0'),
+                                num.parse(addressCoordinateModel[index].input!.point!.x ?? '0')
+                            );
+                          },
                           title: Text(addressCoordinateModel[index].result![0].text??''),
                           subtitle: Text(addressCoordinateModel[index].result![0].zipcode??'')
                       );
@@ -164,4 +185,19 @@ class _AddressPageState extends State<AddressPage> {
       ),
     );
   }
+
+  void saveAddressAndGoNextPage(String address, int page, num lat, num lon) {
+    this.saveAddress(address, lat, lon);
+    context.read<PageController>().animateToPage(page, duration: Duration(milliseconds: 300), curve: Curves.ease);
+  }
+
+  void saveAddress(String addr, num lat, num lon) async {
+    // Obtain shared preferences.
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString(SHARED_ADDRESS, addr);
+    await prefs.setDouble(SHARED_LAT, lat.toDouble());
+    await prefs.setDouble(SHARED_LON, lon.toDouble());
+  }
+
 }

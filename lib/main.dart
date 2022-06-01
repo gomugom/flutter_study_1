@@ -1,4 +1,5 @@
 import 'package:beamer/beamer.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_study_1/router/home_location.dart';
@@ -13,7 +14,8 @@ final routerDelegate = BeamerDelegate(
     BeamGuard(
         pathBlueprints: ['/'],
         check: (context, location) {
-          return context.watch<UserProvider>().userState;  // read() => notifier()를 안받음, watch() => notifier를 부를 때마다 호출됨
+          return true;
+          //return context.watch<UserProvider>().user != null;  // read() => notifier()를 안받음, watch() => notifier를 부를 때마다 호출됨
         },
         showPage: BeamPage(child: StartScreen())
         //beamToNamed: (origin, target) => '/auth'
@@ -24,17 +26,27 @@ final routerDelegate = BeamerDelegate(
   )
 );
 
-void main() { // dart 시작 지점
+void main() async { // dart 시작 지점
+  Provider.debugCheckInvalidValueType = null;
   runApp(MyPage()); // flutter 시작지점
 }
 
-class MyPage extends StatelessWidget {
+class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
+
+  @override
+  State<MyPage> createState() => _MyPageState();
+}
+
+class _MyPageState extends State<MyPage> {
+
+  // Firebase core initialization 필요함 => stateless일경우 상태변화시 앱을 계속 재로딩할 수 있음으로 stateFul widget으로 해야함
+  Future<FirebaseApp> defaultApp = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Object>(
-      future: Future.delayed(Duration(milliseconds: 2000), () => 100),
+      future: defaultApp,
       builder: (context, snapshot) {
         return AnimatedSwitcher(
                 duration: Duration(milliseconds: 1000),
@@ -47,7 +59,7 @@ class MyPage extends StatelessWidget {
     if(snapshot.hasError) {
       logger.e('Error occur!!');
       return Text('Error Occur!!');
-    } else if(snapshot.hasData) {
+    } else if(snapshot.connectionState == ConnectionState.done) {
       return TomatoApp();
     } else {
       return SplashScreen();
@@ -74,7 +86,9 @@ class TomatoApp extends StatelessWidget {
               ),
               button: TextStyle(
                 color: Colors.white
-              )
+              ),
+              subtitle1: TextStyle(fontSize: 16, color : Colors.black87, fontFamily: 'jua'),
+              subtitle2: TextStyle(fontSize: 13, color : Colors.grey, fontFamily: 'jua')
             ),
             hintColor: Colors.grey[400],
             appBarTheme: AppBarTheme(
@@ -94,6 +108,10 @@ class TomatoApp extends StatelessWidget {
                 textStyle: TextStyle(fontFamily: 'jua'),
                 primary: Colors.white
               )
+            ),
+            bottomNavigationBarTheme: BottomNavigationBarThemeData(
+              selectedItemColor: Colors.black87,
+              unselectedItemColor: Colors.black45
             )
           )
       ),

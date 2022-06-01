@@ -1,22 +1,13 @@
-import 'package:dio/dio.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_study_1/state/user_provider.dart';
+import 'package:provider/provider.dart'; // context.read<T>() 를 사용하기 위해 import 필요
 
 import '../../utils/logger.dart';
-import 'package:provider/provider.dart'; // context.read<T>() 를 사용하기 위해 import 필요
 
 class IntroPage extends StatelessWidget {
 
-  PageController pageController;
-
-  IntroPage(this.pageController, {Key? key}) : super(key: key);
-
-  void onBtnClick() async {
-    logger.d('btn clicked');
-
-    pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.ease);
-  }
+  IntroPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +49,9 @@ class IntroPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     TextButton(
-                        onPressed: onBtnClick,
+                        onPressed: () {
+                          context.read<PageController>().animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.ease);
+                        },
                         child: Text('내 동네 설정하고 시작하기', style: Theme.of(context).textTheme.button),
                         style: TextButton.styleFrom(backgroundColor: Theme.of(context).primaryColor)
                     ),

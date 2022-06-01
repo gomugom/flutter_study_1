@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1085506508113",
+    "project_id": "tomato-project-5d6da",
+    "storage_bucket": "tomato-project-5d6da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085506508113:android:c39e889c736b7bd91baf70",
+        "android_client_info": {
+          "package_name": "com.example.flutter_study_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1085506508113-tmba77u18ie07bmp8almv7mpnij3q456.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_study_1",
+            "certificate_hash": "b51b537597f55e95e17120d1789b321e658bf24f"
+          }
+        },
+        {
+          "client_id": "1085506508113-132o9d5ocv8n16amiai9s40g4ndkvus0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADdzPPvxHtm94i7yW06PrA19U9TSDFUSI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1085506508113-132o9d5ocv8n16amiai9s40g4ndkvus0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
