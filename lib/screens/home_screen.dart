@@ -2,8 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_study_1/state/user_provider.dart';
+import 'package:flutter_study_1/widgets/expandable_fab.dart';
 import 'package:provider/provider.dart';
-
+import 'package:beamer/beamer.dart';
 import 'home/items_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -70,6 +71,25 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(color:Colors.accents[3]),
           Container(color:Colors.accents[6]),
           Container(color:Colors.accents[9])
+        ],
+      ),
+      floatingActionButton: ExpandableFab(
+        distance: 98,
+        children: [
+          ActionButton(
+            onPressed: () {
+              context.beamToNamed('/input');
+            },
+            icon: const Icon(Icons.format_size, color: Colors.white),
+          ),
+          ActionButton(
+            onPressed: () {},
+            icon: const Icon(Icons.insert_photo, color: Colors.white),
+          ),
+          ActionButton(
+            onPressed: () {},
+            icon: const Icon(Icons.videocam, color: Colors.white),
+          ),
         ],
       ),
     );

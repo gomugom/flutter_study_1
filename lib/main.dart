@@ -2,7 +2,7 @@ import 'package:beamer/beamer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_study_1/router/home_location.dart';
+import 'package:flutter_study_1/router/locations.dart';
 import 'package:flutter_study_1/screens/start_screen.dart';
 import 'package:flutter_study_1/screens/splash_screen.dart';
 import 'package:flutter_study_1/state/user_provider.dart';
@@ -22,7 +22,7 @@ final routerDelegate = BeamerDelegate(
     )
   ],
   locationBuilder: BeamerLocationBuilder(
-    beamLocations: [HomeLocation()],
+    beamLocations: [HomeLocation(), InputLocation()],
   )
 );
 
@@ -88,11 +88,13 @@ class TomatoApp extends StatelessWidget {
                 color: Colors.white
               ),
               subtitle1: TextStyle(fontSize: 16, color : Colors.black87, fontFamily: 'jua'),
-              subtitle2: TextStyle(fontSize: 13, color : Colors.grey, fontFamily: 'jua')
+              subtitle2: TextStyle(fontSize: 13, color : Colors.grey, fontFamily: 'jua'),
+              bodyText2: TextStyle(fontSize: 13, color : Colors.black87, fontFamily: 'jua', fontWeight: FontWeight.w200)
             ),
             hintColor: Colors.grey[400],
             appBarTheme: AppBarTheme(
               backgroundColor: Colors.white,
+              foregroundColor: Colors.black87,
               titleTextStyle: TextStyle(
                   color: Colors.black87,
                   fontWeight: FontWeight.bold,
